@@ -1,0 +1,33 @@
+laravel:
+  build: .
+  container_name: laravel
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - ./public_html:/var/www/html
+  links:
+    - mysql
+
+mysql:
+  image: mysql:5.7
+  container_name: mysql
+  ports:
+    - "3306:3306"
+  volumes:
+    - /var/lib/mysql
+    - ./dump:/docker-entrypoint-initdb.d
+  environment:
+    - MYSQL_DATABASE=database
+    - MYSQL_ROOT_PASSWORD=root
+    
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin:latest
+  container_name: phpmyadmin
+  links:
+    - mysql
+  ports:
+    - 8080:80
+  environment:
+    - PMA_ARBITRARY=1
+    - PMA_HOST=localhost
